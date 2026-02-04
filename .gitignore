@@ -1,0 +1,36 @@
+# Build artifacts
+build/
+*.elf
+*.bin
+*.o
+*.a
+*.hex
+
+# Nim compiler cache
+nimcache/
+.nimcache/
+*.nim.cpp
+
+# Test executables and debug symbols
+tests/all_tests
+tests/*.dSYM/
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generated documentation
+docs/api/
+
+# Nimble auto-generated files
+nimble.develop
+nimble.paths
+nimbledeps/
+config.nims
