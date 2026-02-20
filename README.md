@@ -62,23 +62,6 @@ nimble make blink      # Build example for ARM Cortex-M7
 nimble flash blink      # Flash to Daisy via USB (DFU)
 ```
 
-### Applying Patches (Required for ICM20948 Sensor)
-
-**Note**: If you plan to use the ICM20948 9-axis IMU sensor, you must apply a patch to libDaisy first:
-
-```bash
-cd nimphea
-./apply_patches.sh
-```
-
-This fixes an upstream bug in libDaisy's ICM20948 magnetometer initialization. See `patches/README.md` for details. The patch is safe and only affects ICM20948 functionality.
-
-**Why is this needed?**
-- The ICM20948 module in libDaisy has a bug preventing magnetometer initialization
-- We've created a minimal 1-line patch that fixes the issue
-- This patch has been prepared for upstream submission to libDaisy
-- Other sensors (APDS9960, DPS310, TLV493D, MPR121, NeoTrellis) work without patches
-
 See **[QUICKSTART.md](docs/QUICKSTART.md)** for detailed setup instructions.
 
 ## What Can You Build?

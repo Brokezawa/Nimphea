@@ -181,13 +181,13 @@ nimble test
 
 | Example | Category | Hardware Required | Expected Behavior | Common Issues | Status |
 |---------|----------|-------------------|-------------------|---------------|--------|
-| **sensor_demo.nim** | Sensors | I2C sensors on D11/D12 | Consolidated sensor demo with compile-time modes: **IMU** - ICM20948 9-axis motion tracking (accel/gyro/mag), requires libDaisy patch; **GESTURE** - APDS9960 gesture/proximity/color sensing; **ENVIRONMENTAL** - DPS310 pressure/altitude + TLV493D magnetic field; **TOUCH** - MPR121 capacitive touch + NeoTrellis 4x4 RGB matrix for 16-step sequencer. | No magnetometer = patch not applied; No gestures = check orientation; Touch not detected = adjust sensitivity | SKIP: |
+| **sensor_demo.nim** | Sensors | I2C sensors on D11/D12 | Consolidated sensor demo with compile-time modes: **IMU** - ICM20948 9-axis motion tracking (accel/gyro/mag); **GESTURE** - APDS9960 gesture/proximity/color sensing; **ENVIRONMENTAL** - DPS310 pressure/altitude + TLV493D magnetic field; **TOUCH** - MPR121 capacitive touch + NeoTrellis 4x4 RGB matrix for 16-step sequencer. | No magnetometer = check libDaisy version; No gestures = check orientation; Touch not detected = adjust sensitivity | SKIP: |
 
 **Hardware Notes for Sensor Examples:**
 - All sensor modes use I2C on pins D11 (SCL) and D12 (SDA)
 - I2C pull-up resistors (4.7kΩ typical) required on SCL and SDA lines
 - Power sensors from 3.3V output (most sensors are 3.3V only)
-- ICM20948 mode requires applying libDaisy patch before compilation
+- ICM20948 mode uses libDaisy; ensure `libDaisy` is updated to a recent master
 - Sensor addresses: ICM20948 (0x68/0x69), APDS9960 (0x39), DPS310 (0x77), TLV493D (0x5E), MPR121 (0x5A), NeoTrellis (0x2E)
 
 ### System Examples
