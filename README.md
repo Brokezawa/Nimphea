@@ -30,6 +30,9 @@ This wrapper allows you to write firmware for the Daisy Seed embedded audio boar
 - **Nim** - 2.0 or later
 - **ARM Toolchain** - `arm-none-eabi-gcc` and related tools
 - **dfu-util** - For uploading firmware
+ 
+ Recommended toolchain: GCC Arm Embedded v10.3-2021.10 or later. See the Daisy C++ development environment guide for setup instructions:
+ https://daisy.audio/tutorials/cpp-dev-env/
 
 ### Installation
 
@@ -80,4 +83,3 @@ This wrapper follows the same MIT license as libDaisy. See [LICENSE](LICENSE) fi
 ## contributing
 
 Contributions are welcome! See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for details.
-

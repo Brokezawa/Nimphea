@@ -14,29 +14,32 @@ requires "nimphea >= 1.0.0"
 import os, strutils, strformat
 
 task make, "Build for ARM Cortex-M7":
-  let nimpheaPath = gorge("nimble path nimphea").strip()
-  if nimpheaPath == "":
-    echo "Error: nimphea package not found. Run 'nimble install nimphea' first."
+  var pkgPath = ""
+  let rawPaths = gorge("nimble path nimphea")
+  for ln in rawPaths.splitLines():
+    let p = ln.strip()
+    if p.len > 0 and dirExists(p):
+      pkgPath = p
+      break
+  if pkgPath == "":
+    echo "Error: nimphea package not found. Run 'nimble install nimphea' and then 'nimble init_libdaisy' inside the package path."
     quit(1)
-  
-  # Standard build flags for Daisy Seed
+
   var nimCmd = "nim cpp"
+  nimCmd.add(" --cc:gcc --gcc.exe:arm-none-eabi-gcc --gcc.cpp.exe:arm-none-eabi-g++ --gcc.linkerexe:arm-none-eabi-g++")
   nimCmd.add(" --cpu:arm --os:standalone --mm:arc --opt:size --exceptions:goto")
   nimCmd.add(" --define:useMalloc --define:noSignalHandler")
-  
-  # Include nimphea src and libDaisy
-  nimCmd.add(" --path:" & nimpheaPath / "src")
-  
-  # Link with libDaisy (assume built by nimble install)
-  nimCmd.add(" --passL:-L" & nimpheaPath / "libDaisy/build")
+  nimCmd.add(" --path:src")
+  nimCmd.add(" --path:" & pkgPath & "/src")
+  nimCmd.add(" --passL:-L" & pkgPath & "/libDaisy/build")
   nimCmd.add(" --passL:-ldaisy")
-  
-  # ELF and BIN output
+  nimCmd.add(" --passC:-I" & pkgPath & "/libDaisy/src")
+  nimCmd.add(" --passC:-DSTM32H750xx")
+
   let target = "main"
+  mkDir("build")
   nimCmd.add(" -o:build/" & target & ".elf")
   nimCmd.add(" src/" & target & ".nim")
-  
-  mkDir("build")
   exec nimCmd
   exec "arm-none-eabi-objcopy -O binary build/" & target & ".elf build/" & target & ".bin"
   exec "arm-none-eabi-size build/" & target & ".elf"

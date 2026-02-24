@@ -5,7 +5,9 @@ author        = "Brokezawa"
 description   = "Nimphea - Elegant Nim bindings for libDaisy Hardware Abstraction Library (Daisy Audio Platform: Seed, Patch, Pod, Field, Petal, Versio)"
 license       = "MIT"
 srcDir        = "src"
-installDirs   = @["libDaisy"]
+# Ensure Nim sources are included when the package is installed so
+# downstream examples can `import nimphea` after `nimble install`.
+installDirs   = @["src", "libDaisy"]
 installFiles  = @[]
 skipDirs      = @["tests", "docs", "nimphea-examples", "templates", "cmake", "ci", "resources"]
 skipFiles     = @[]
@@ -13,26 +15,64 @@ skipFiles     = @[]
 # Dependencies
 
 requires "nim >= 2.0.0"
-requires "unittest2 >= 0.2.0"
 
 # Build configuration
 import os, strutils, strformat, algorithm
 
+proc programExists(cmd: string): bool =
+  ## Cross-platform check for an executable in PATH. Try `which` then `where`.
+  let w = gorge("which " & cmd).strip()
+  if w.len > 0: return true
+  let w2 = gorge("where " & cmd).strip()
+  if w2.len > 0: return true
+  return false
+
 after install:
-  # Initialize submodules and build libDaisy on install
-  echo "--- Post-install: Building libDaisy ---"
-  if dirExists(".git"):
-    exec "git submodule update --init --recursive"
-  
-  if dirExists("libDaisy") and fileExists("libDaisy/Makefile"):
-    withDir "libDaisy":
-      exec "make"
-    echo "--- libDaisy build complete ---"
-  else:
-    echo "Warning: libDaisy source not found or incomplete."
-    echo "You may need to manually initialize it in the package directory:"
-    echo "  cd " & (gorge("nimble path nimphea").strip()) & " && git clone https://github.com/electro-smith/libDaisy.git"
-    echo "  then run 'make' inside libDaisy."
+  ## Post-install: print instructions and prepare for manual init_libdaisy
+  ## We avoid forcing a network build in restricted environments. The user
+  ## can run `nimble init_libdaisy` in the printed path to finish the one-time
+  ## setup. This keeps `nimble install` robust across platforms.
+  echo "--- Post-install: nimphea installed ---"
+  let nimpheaPath = getCurrentDir()
+  echo fmt"Nimphea package path: {nimpheaPath}"
+  echo "To initialize libDaisy (one-time), run the following inside that path:"
+  echo fmt"  cd {nimpheaPath}"
+  echo "  nimble init_libdaisy"
+  echo "This will clone libDaisy submodules and build the C++ library (requires ARM toolchain)."
+  echo "If you want automatic initialization during install, set the environment variable NIMPHEA_AUTO_INIT=1 and re-run nimble install."
+  # If user asked for auto init via env var, attempt it (best-effort)
+  let envAuto = getEnv("NIMPHEA_AUTO_INIT")
+  if envAuto == "1" or envAuto == "true" or envAuto == "on":
+    echo "Detected NIMPHEA_AUTO_INIT; attempting automatic libDaisy initialization (best-effort)"
+    # Check for git and make availability
+    let hasGit = programExists("git")
+    let hasMake = programExists("make")
+    if not hasGit:
+      echo "Warning: 'git' not found in PATH; cannot clone libDaisy. Install git and run 'nimble init_libdaisy' manually."
+    elif not hasMake:
+      echo "Warning: 'make' not found in PATH; cannot build libDaisy. Install make and run 'nimble init_libdaisy' manually."
+    else:
+      # Attempt to initialize (best-effort). Keep errors non-fatal.
+      try:
+        if not dirExists("libDaisy"):
+          echo "Cloning libDaisy (recursive)..."
+          exec "git clone --recursive https://github.com/electro-smith/libDaisy.git"
+        else:
+          if not dirExists(joinPath("libDaisy", ".git")):
+            echo "libDaisy directory exists but has no .git; re-cloning to initialize submodules"
+            exec "rm -rf libDaisy"
+            exec "git clone --recursive https://github.com/electro-smith/libDaisy.git"
+        # Initialize submodules
+        withDir "libDaisy":
+          echo "Updating libDaisy submodules..."
+          exec "git submodule update --init --recursive"
+          # Build libDaisy
+          if not fileExists("build/libdaisy.a"):
+            echo "Building libDaisy (this may take a few minutes)..."
+            exec "make"
+      except OSError as e:
+        echo fmt"Automatic libDaisy init failed: {e}" 
+        echo "Please run 'nimble init_libdaisy' inside the nimphea package directory."
 
 const
   libDaisyDir = "libDaisy"
@@ -45,16 +85,27 @@ task init_libdaisy, "Initialize and build libDaisy dependency":
   echo ""
   
   if not dirExists(libDaisyDir):
-    echo "Initializing git submodules..."
-    exec "git submodule update --init --recursive"
+    echo "Cloning libDaisy (recursive)..."
+    exec "git clone --recursive https://github.com/electro-smith/libDaisy.git"
   else:
-    echo "libDaisy submodule found"
-  
+    echo "libDaisy directory found"
+
   echo ""
   echo "Building libDaisy C++ library..."
   echo "This may take several minutes..."
+  # Verify required tools
+  if not programExists("git"):
+    echo "Error: 'git' not found in PATH. Install git and retry."
+    quit(1)
+  # Recommend toolchain version
+  echo "Note: Recommended ARM toolchain: GCC Arm Embedded v10.3-2021.10 or later"
+  echo "See: https://daisy.audio/tutorials/cpp-dev-env/"
+  if not programExists("arm-none-eabi-gcc"):
+    echo "Warning: 'arm-none-eabi-gcc' not found in PATH. Building libDaisy may fail."
   withDir libDaisyDir:
-    exec "make"
+    exec "git submodule update --init --recursive"
+    if not fileExists("build/libdaisy.a"):
+      exec "make"
   
   echo ""
   echo "libDaisy initialization complete!"
