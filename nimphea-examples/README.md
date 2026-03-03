@@ -2,6 +2,8 @@
 
 This repository contains a collection of examples for the Nimphea Nim wrapper for the Daisy Audio Platform.
 
+> **Requires Nimphea v1.1.0 or later.**
+
 ## Structure
 
 Each example is a standalone Nim project located in the `examples/` directory.
