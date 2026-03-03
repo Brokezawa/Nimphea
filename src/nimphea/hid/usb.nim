@@ -64,7 +64,7 @@
 ##     echo "USB Host ready: ", usbHost.getProductName()
 ## ```
 
-import nimphea_macros
+import nimphea/nimphea_macros
 
 useNimpheaModules(usb, usb_midi, usb_host)
 
@@ -187,14 +187,20 @@ proc transmitExternal*(this: var UsbHandle, data: cstring): UsbResult =
 
 proc transmitInternal*(this: var UsbHandle, data: openArray[byte]): UsbResult =
   ## Transmit a byte array via internal USB
+  if data.len == 0:
+    return USB_OK
   result = this.transmitInternal(cast[ptr uint8](addr data[0]), data.len.csize_t)
 
 proc transmitExternal*(this: var UsbHandle, data: openArray[byte]): UsbResult =
   ## Transmit a byte array via external USB
+  if data.len == 0:
+    return USB_OK
   result = this.transmitExternal(cast[ptr uint8](addr data[0]), data.len.csize_t)
 
 proc tx*(this: var MidiUsbTransport, buffer: openArray[byte]) =
   ## Transmit MIDI data from a byte array
+  if buffer.len == 0:
+    return
   this.tx(cast[ptr uint8](addr buffer[0]), buffer.len.csize_t)
 
 when isMainModule:

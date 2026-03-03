@@ -31,11 +31,14 @@ type
 proc init*[NT, MB: static int](f: var FirFilter[NT, MB], coeffs: ptr float32_t) =
   ## Initialize FIR filter with coefficients.
   ## Coeffs must point to an array of NumTaps floats.
+  static: assert NT > 0, "FIR NumTaps must be > 0"
+  static: assert MB > 0, "FIR MaxBlockSize must be > 0"
   f.instance.numTaps = NT.uint16
   f.instance.pCoeffs = coeffs
   f.instance.pState = addr f.state[0]
   # Zero state
   for i in 0..<f.state.len: f.state[i] = 0.0
+  arm_fir_init_f32(addr f.instance, NT.uint16, coeffs, addr f.state[0], MB.uint32)
 
 proc process*[NT, MB: static int](f: var FirFilter[NT, MB], input: openArray[float32], output: var openArray[float32]) {.inline.} =
   ## Process an audio block through the FIR filter.
@@ -67,11 +70,13 @@ type
 proc init*[NS: static int](f: var BiquadFilter[NS], coeffs: ptr float32_t) =
   ## Initialize Biquad filter with coefficients.
   ## Coeffs must point to [b0, b1, b2, a1, a2] * NumStages floats.
+  static: assert NS > 0, "Biquad NumStages must be > 0"
   f.instance.numStages = NS.uint8
   f.instance.pCoeffs = coeffs
   f.instance.pState = addr f.state[0]
   # Zero state
   for i in 0..<f.state.len: f.state[i] = 0.0
+  arm_biquad_cascade_df1_init_f32(addr f.instance, NS.uint8, coeffs, addr f.state[0])
 
 proc process*[NS: static int](f: var BiquadFilter[NS], input: openArray[float32], output: var openArray[float32]) {.inline.} =
   ## Process an audio block through the Biquad filter.

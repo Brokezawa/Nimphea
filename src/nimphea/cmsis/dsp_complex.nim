@@ -61,7 +61,8 @@ proc conjugate*(dst: var openArray[float32], src: openArray[float32]) {.inline.}
 proc dotProduct*(a, b: openArray[float32]): tuple[real, imag: float32] =
   ## Complex dot product
   let n = min(a.len div 2, b.len div 2)
-  var re, im: float32_t
+  var re: float32_t = 0.0
+  var im: float32_t = 0.0
   if n > 0:
     arm_cmplx_dot_prod_f32(cast[ptr float32_t](addr a[0]), cast[ptr float32_t](addr b[0]), n.uint32, addr re, addr im)
   return (re.float32, im.float32)

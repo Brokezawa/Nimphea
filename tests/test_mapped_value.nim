@@ -7,7 +7,7 @@
 
 import unittest2
 import std/math
-import ../src/nimphea_mapped_value
+import nimphea/nimphea_mapped_value
 
 suite "MappedValue: Float Mapping":
   test "should map 0-1 to float range":

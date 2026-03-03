@@ -37,23 +37,25 @@ proc init*[N: static int](fft: var FftInstance[N]): ArmStatus =
   static: assert (N and (N - 1)) == 0, "FFT size must be a power of 2"
   arm_cfft_init_f32(addr fft.instance, N.uint16)
 
-proc forward*[N: static int](fft: var FftInstance[N], data: var openArray[float32]) {.inline.} =
+proc forward*[N: static int](fft: var FftInstance[N], data: var openArray[float32]): ArmStatus {.inline.} =
   ## Perform forward FFT in-place.
   ## data must contain 2*N floats (interleaved real and imaginary).
   ##
-  ## **Note:** This proc panics if buffer is too small. Check `data.len >= 2*N` before calling.
+  ## **Note:** Returns ARM_MATH_ARGUMENT_ERROR if buffer is too small.
   if unlikely(data.len < 2 * N):
-    raise newException(ValueError, "CFFT: buffer too small (need " & $(2*N) & " floats, got " & $data.len & ")")
+    return ARM_MATH_ARGUMENT_ERROR
   arm_cfft_f32(addr fft.instance, cast[ptr float32_t](addr data[0]), 0, 1)
+  return ARM_MATH_SUCCESS
 
-proc inverse*[N: static int](fft: var FftInstance[N], data: var openArray[float32]) {.inline.} =
+proc inverse*[N: static int](fft: var FftInstance[N], data: var openArray[float32]): ArmStatus {.inline.} =
   ## Perform inverse FFT in-place.
   ## data must contain 2*N floats (interleaved real and imaginary).
   ##
-  ## **Note:** This proc panics if buffer is too small. Check `data.len >= 2*N` before calling.
+  ## **Note:** Returns ARM_MATH_ARGUMENT_ERROR if buffer is too small.
   if unlikely(data.len < 2 * N):
-    raise newException(ValueError, "CFFT: buffer too small (need " & $(2*N) & " floats, got " & $data.len & ")")
+    return ARM_MATH_ARGUMENT_ERROR
   arm_cfft_f32(addr fft.instance, cast[ptr float32_t](addr data[0]), 1, 1)
+  return ARM_MATH_SUCCESS
 
 # ============================================================================
 # Real FFT (RFFT) - Fast
@@ -83,26 +85,28 @@ proc init*[N: static int](fft: var RealFftInstance[N]): ArmStatus =
   static: assert (N and (N - 1)) == 0, "RFFT size must be a power of 2"
   arm_rfft_fast_init_f32(addr fft.instance, N.uint16)
 
-proc forward*[N: static int](fft: var RealFftInstance[N], input: openArray[float32], output: var openArray[float32]) {.inline.} =
+proc forward*[N: static int](fft: var RealFftInstance[N], input: openArray[float32], output: var openArray[float32]): ArmStatus {.inline.} =
   ## Perform forward Real FFT.
   ## input must contain N real samples.
   ## output must contain N floats (complex result in specific format).
   ##
-  ## **Note:** This proc panics if buffers are too small. Check `input.len >= N` and `output.len >= N` before calling.
+  ## **Note:** Returns ARM_MATH_ARGUMENT_ERROR if buffers are too small.
   if unlikely(input.len < N):
-    raise newException(ValueError, "RFFT: input buffer too small (need " & $N & " floats, got " & $input.len & ")")
+    return ARM_MATH_ARGUMENT_ERROR
   if unlikely(output.len < N):
-    raise newException(ValueError, "RFFT: output buffer too small (need " & $N & " floats, got " & $output.len & ")")
+    return ARM_MATH_ARGUMENT_ERROR
   arm_rfft_fast_f32(addr fft.instance, cast[ptr float32_t](addr input[0]), cast[ptr float32_t](addr output[0]), 0)
+  return ARM_MATH_SUCCESS
 
-proc inverse*[N: static int](fft: var RealFftInstance[N], input: openArray[float32], output: var openArray[float32]) {.inline.} =
+proc inverse*[N: static int](fft: var RealFftInstance[N], input: openArray[float32], output: var openArray[float32]): ArmStatus {.inline.} =
   ## Perform inverse Real FFT.
   ## input contains frequency data (N floats).
   ## output will contain N real samples.
   ##
-  ## **Note:** This proc panics if buffers are too small. Check `input.len >= N` and `output.len >= N` before calling.
+  ## **Note:** Returns ARM_MATH_ARGUMENT_ERROR if buffers are too small.
   if unlikely(input.len < N):
-    raise newException(ValueError, "RFFT: input buffer too small (need " & $N & " floats, got " & $input.len & ")")
+    return ARM_MATH_ARGUMENT_ERROR
   if unlikely(output.len < N):
-    raise newException(ValueError, "RFFT: output buffer too small (need " & $N & " floats, got " & $output.len & ")")
+    return ARM_MATH_ARGUMENT_ERROR
   arm_rfft_fast_f32(addr fft.instance, cast[ptr float32_t](addr input[0]), cast[ptr float32_t](addr output[0]), 1)
+  return ARM_MATH_SUCCESS

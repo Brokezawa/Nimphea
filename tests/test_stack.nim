@@ -7,7 +7,7 @@
 
 import unittest2
 import std/strutils
-import ../src/nimphea_stack
+import nimphea/nimphea_stack
 
 suite "Stack: Basic Properties":
   test "should report correct capacity":

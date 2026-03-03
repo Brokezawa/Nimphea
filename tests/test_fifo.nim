@@ -7,7 +7,7 @@
 
 import unittest2
 import std/strutils
-import ../src/nimphea_fifo
+import nimphea/nimphea_fifo
 
 suite "FIFO: Basic Properties":
   test "should report correct capacity":

@@ -70,7 +70,7 @@ proc arm_dot_prod_f32*(pSrcA, pSrcB: ptr float32_t, blockSize: uint32, result: p
 proc dotProduct*(a, b: openArray[float32]): float32 =
   ## Vector dot product: sum(a[i] * b[i])
   let n = min(a.len, b.len)
-  var res: float32_t
+  var res: float32_t = 0.0
   if n > 0:
     arm_dot_prod_f32(addr a[0], addr b[0], n.uint32, addr res)
   return res.float32

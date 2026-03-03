@@ -25,7 +25,7 @@
 ##   hw.delay(1)
 ## ```
 
-import nimphea_macros
+import nimphea/nimphea_macros
 import nimphea  # For Pin type
 
 useNimpheaModules(gatein)

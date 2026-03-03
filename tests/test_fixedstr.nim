@@ -4,7 +4,7 @@
 ## Mirrors libDaisy's FixedCapStr_gtest.cpp test suite.
 
 import unittest2
-import nimphea_fixedstr
+import nimphea/nimphea_fixedstr
 
 suite "FixedStr - Basics":
   test "Empty string has zero length":

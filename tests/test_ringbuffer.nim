@@ -7,7 +7,7 @@
 
 import unittest2
 import std/strutils
-import ../src/nimphea_ringbuffer
+import nimphea/nimphea_ringbuffer
 
 suite "RingBuffer: Basic Properties":
   test "should report correct capacity":

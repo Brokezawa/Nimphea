@@ -224,7 +224,7 @@
 ## - Nim's `strutils` module - String formatting utilities
 
 import nimphea
-import nimphea_macros
+import nimphea/nimphea_macros
 
 when isMainModule:
   discard  # Examples removed for simplicity
