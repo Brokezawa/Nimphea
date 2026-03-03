@@ -2,6 +2,9 @@
 
 Nim wrapper for the [libDaisy](https://github.com/electro-smith/libDaisy) C++ HAL targeting ARM Cortex-M7 (STM32H750) Daisy hardware. Compiles Nim → C++ → ARM ELF via `arm-none-eabi-gcc`. Requires Nim ≥ 2.0.0.
 
+**Example projects:** See [nimphea-examples](https://github.com/Brokezawa/nimphea-examples) (43 programs). 
+**Project templates:** [Basic](https://github.com/Brokezawa/nimphea-template-basic) and [Audio](https://github.com/Brokezawa/nimphea-template-audio) (GitHub templates).
+
 ## Build & Test
 
 ```bash

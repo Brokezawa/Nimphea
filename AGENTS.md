@@ -131,11 +131,14 @@ src/nimphea/
 ├── util/                     # Utilities (oled_fonts)
 └── nimphea_*.nim             # Flat modules: fifo, stack, ringbuffer, fixedstr,
                               #   color, wavplayer, wavwriter, menu, sai, etc.
-nimphea-examples/             # 43 example programs (also published as separate repo)
 libDaisy/                     # C++ library (submodule — never modify)
-templates/                    # Project templates (basic, audio)
 tests/                        # Host-side unit tests (pure-Nim modules only)
 ```
+
+**Published companion repos:**
+- [nimphea-examples](https://github.com/Brokezawa/nimphea-examples) — 43 example programs
+- [nimphea-template-basic](https://github.com/Brokezawa/nimphea-template-basic) — GitHub template for basic projects
+- [nimphea-template-audio](https://github.com/Brokezawa/nimphea-template-audio) — GitHub template for audio projects
 
 ## Macro System (CRITICAL)
 
