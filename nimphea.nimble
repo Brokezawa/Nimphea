@@ -19,20 +19,21 @@ requires "unittest2 >= 0.2.0"
 import os, strutils, strformat, algorithm
 
 after install:
-  # Initialize submodules and build libDaisy on install
-  echo "--- Post-install: Building libDaisy ---"
+  # Initialize submodules and build libDaisy on install (only in dev mode)
+  # In CI environments without .git, skip this silently
   if dirExists(".git"):
+    echo "--- Post-install: Building libDaisy ---"
     exec "git submodule update --init --recursive"
-  
-  if dirExists("libDaisy") and fileExists("libDaisy/Makefile"):
-    withDir "libDaisy":
-      exec "make"
-    echo "--- libDaisy build complete ---"
-  else:
-    echo "Warning: libDaisy source not found or incomplete."
-    echo "You may need to manually initialize it in the package directory:"
-    echo "  cd " & (gorge("nimble path nimphea").strip()) & " && git clone https://github.com/electro-smith/libDaisy.git"
-    echo "  then run 'make' inside libDaisy."
+    
+    if dirExists("libDaisy") and fileExists("libDaisy/Makefile"):
+      withDir "libDaisy":
+        exec "make"
+      echo "--- libDaisy build complete ---"
+    else:
+      echo "Warning: libDaisy source not found or incomplete."
+      echo "You may need to manually initialize it in the package directory:"
+      echo "  cd " & (gorge("nimble path nimphea").strip()) & " && git clone https://github.com/electro-smith/libDaisy.git"
+      echo "  then run 'make' inside libDaisy."
 
 const
   libDaisyDir = "libDaisy"
