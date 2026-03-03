@@ -5,9 +5,9 @@ author        = "Brokezawa"
 description   = "Nimphea - Elegant Nim bindings for libDaisy Hardware Abstraction Library (Daisy Audio Platform: Seed, Patch, Pod, Field, Petal, Versio)"
 license       = "MIT"
 srcDir        = "src"
-installDirs   = @["libDaisy"]
+installDirs   = @[]
 installFiles  = @[]
-skipDirs      = @["tests", "docs", "nimphea-examples", "templates", "cmake", "ci", "resources", ".github"]
+skipDirs      = @["tests", "docs", "nimphea-examples", "templates", "cmake", "ci", "resources", ".github", "libDaisy"]
 skipFiles     = @[]
 
 # Dependencies
