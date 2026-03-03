@@ -7,6 +7,8 @@ Nim wrapper for the [libDaisy](https://github.com/electro-smith/libDaisy) C++ HA
 ```bash
 # One-time setup
 nimble init_libdaisy          # Clone submodules + build libDaisy
+nimble develop                # Symlink package into ~/.nimble/pkgs2/ so
+                              # `import nimphea` works without hardcoded paths
 
 # Build a single example (ARM cross-compile)
 nimble make blink             # → build/blink.elf + build/blink.bin

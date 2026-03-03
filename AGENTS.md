@@ -1,12 +1,16 @@
 # AGENTS.md - Guide for AI Coding Agents
 
-**Nimphea** v1.0.0 - Nim wrapper for libDaisy embedded audio platform (ARM Cortex-M7 / STM32H750).
+**Nimphea** v1.1.0 - Nim wrapper for libDaisy embedded audio platform (ARM Cortex-M7 / STM32H750).
 
 ## Build & Test Commands
 
 ```bash
 # One-time setup (clone submodules, build libDaisy)
 nimble init_libdaisy
+
+# Development install — symlinks package into ~/.nimble/pkgs2/ so
+# `import nimphea` resolves without hardcoded paths
+nimble develop
 
 # Build for ARM (outputs: build/*.elf, build/*.bin)
 nimble make blink              # Build single example
