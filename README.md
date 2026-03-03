@@ -2,6 +2,7 @@
 
 A comprehensive, type-safe Nim wrapper for the [libDaisy](https://github.com/electro-smith/libDaisy) hardware abstraction library, enabling elegant Nim development for the Electro-Smith Daisy Seed embedded audio platform.
 
+[![CI](https://github.com/Brokezawa/nimphea/actions/workflows/ci.yml/badge.svg)](https://github.com/Brokezawa/nimphea/actions/workflows/ci.yml)
 [![Version](https://img.shields.io/badge/version-1.1.0-blue)](https://github.com/Brokezawa/nimphea/releases/tag/v1.1.0)
 [![Platform](https://img.shields.io/badge/platform-ARM%20Cortex--M7-blue)](https://www.st.com/en/microcontrollers-microprocessors/stm32h750xb.html)
 [![Nim](https://img.shields.io/badge/nim-2.0%2B-orange)](https://nim-lang.org/)

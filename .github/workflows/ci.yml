@@ -28,5 +28,8 @@ jobs:
       - name: Syntax check core module
         run: nim check src/nimphea.nim
 
-      - name: Run unit tests
+      - name: Syntax check examples
         run: nimble test
+
+      - name: Run unit tests
+        run: nimble test_unit
