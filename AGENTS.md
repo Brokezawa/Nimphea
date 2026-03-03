@@ -21,9 +21,10 @@ nimble flash blink              # Via DFU bootloader (USB)
 nimble stlink blink             # Via ST-Link/OpenOCD (faster)
 
 # Testing
-nimble test                     # Test all 43 examples (syntax check)
+nimble test                     # Syntax check all 43 examples (host, no ARM)
 nim check examples/blink.nim    # Fast syntax check for single file
 nimble make blink               # Full compile test with linking
+nimble test_unit                # Unit tests for pure-Nim modules (host)
 
 # Other
 nimble clear                    # Remove build/ directory and artifacts
@@ -51,9 +52,10 @@ var ledState = false              # Vars: camelCase (not exported)
 ## 
 ## Detailed description with usage examples.
 
-import std/math                 # Standard imports first
-import nimphea, nimphea_macros  # Local imports
-import per/adc, hid/switch      # Category-based organization
+import std/math                       # Standard imports first
+import nimphea                        # For examples
+import nimphea/nimphea_macros         # For wrapper modules
+import nimphea/per/adc                # Category-based organization
 
 useNimpheaNamespace()           # For examples (REQUIRED)
 useNimpheaModules(adc)          # For wrappers (after imports!)
@@ -80,6 +82,9 @@ proc delay*(this: var DaisySeed, ms: csize_t) {.importcpp: "#.DelayMs(@)".}
 proc newPin*(port: GPIOPort, pin: uint8): Pin 
   {.importcpp: "daisy::Pin(@)", constructor, header: "daisy_seed.h".}
 
+# C function (no this-pointer)
+proc arm_fir_f32*(S: ptr FirInstanceF32, ...) {.importc, header: "arm_math.h".}
+
 # Type mappings: int→cint, float→cfloat, uint16→uint16, size_t→csize_t
 # T*→ptr T, T&→var T, const T&→T
 ```
@@ -105,17 +110,31 @@ proc process*(input, output: AudioBuffer, size: int) =
 
 ```
 src/
-├── nimphea.nim           # Core API (DaisySeed, GPIO, Audio)
-├── nimphea_macros.nim    # C++ interop macro system
-├── boards/               # Board support (pod, patch, field, etc. - 8 boards)
-├── per/                  # Peripherals (adc, dac, spi, i2c, uart - 12 modules)
-├── hid/                  # Human interface (switch, led, midi, usb)
-│   └── disp/             # Display drivers
-├── dev/                  # Device drivers (sensors, codecs, displays - 20+ devices)
-├── sys/                  # System (dma, sdram, fatfs, system)
-└── ui/                   # UI framework (menu, events)
-examples/                 # 43 tested examples
-libDaisy/                 # C++ library (submodule)
+└── nimphea.nim               # Public API entry point (re-exports, DaisySeed, audio types)
+src/nimphea/
+├── nimphea_macros.nim        # Compile-time C++ interop macro system
+├── panicoverride.nim         # Bare-metal panic handler
+├── boards/                   # Per-board wrappers (7 boards: pod, patch, patch_sm,
+│                             #   field, petal, versio, legio)
+├── per/                      # Peripheral wrappers (11 modules: adc, dac, i2c, spi,
+│                             #   spi_multislave, uart, pwm, qspi, rng, sdmmc, tim)
+├── hid/                      # Human interface (switch, switch3, encoder/ctrl, led,
+│                             #   rgb_led, midi, usb, logger, parameter, gatein)
+│   └── disp/                 # Display abstractions (oled_display, graphics_common)
+├── dev/                      # Device drivers (20 drivers: codecs, OLED, IMU,
+│                             #   LED drivers, sensors, shift registers, etc.)
+├── sys/                      # System modules (dma, sdram, fatfs, system)
+├── cmsis/                    # CMSIS-DSP wrappers (13 modules: dsp_filtering,
+│                             #   dsp_transforms, dsp_matrix, dsp_statistics,
+│                             #   dsp_basic, dsp_fastmath, dsp_complex, etc.)
+├── ui/                       # UI framework (display, events, menu_builder)
+├── util/                     # Utilities (oled_fonts)
+└── nimphea_*.nim             # Flat modules: fifo, stack, ringbuffer, fixedstr,
+                              #   color, wavplayer, wavwriter, menu, sai, etc.
+nimphea-examples/             # 43 example programs (also published as separate repo)
+libDaisy/                     # C++ library (submodule — never modify)
+templates/                    # Project templates (basic, audio)
+tests/                        # Host-side unit tests (pure-Nim modules only)
 ```
 
 ## Macro System (CRITICAL)
@@ -123,15 +142,18 @@ libDaisy/                 # C++ library (submodule)
 **Always use macros for C++ headers. NO raw emit!**
 
 ```nim
-# CORRECT: CORRECT - For examples
+# For examples — includes all typedefs + `using namespace daisy`
 import nimphea
 useNimpheaNamespace()
 
-# CORRECT: CORRECT - For wrapper modules
-import nimphea_macros
+# For wrapper modules under src/nimphea/ — selective includes
+import nimphea/nimphea_macros
 useNimpheaModules(spi, i2c)
 
-# WRONG: WRONG
+# For CMSIS-DSP modules
+useCmsisModules(dsp_filtering)
+
+# WRONG — never do this
 {.emit: """#include "per/spi.h"
 using namespace daisy;""".}
 ```
@@ -144,35 +166,32 @@ using namespace daisy;""".}
 ### Adding New Module
 
 1. Find C++ header in `libDaisy/src/`
-2. Edit `nimphea_macros.nim`:
+2. Edit `src/nimphea/nimphea_macros.nim`:
    ```nim
    const myTypedefs* = ["MyClass::Result MyResult"]
    # Add to getModuleHeaders() and useNimpheaModules()
    ```
-3. Create wrapper in `src/per/mymodule.nim`
-4. Test with `nimble test`
+3. Create wrapper in `src/nimphea/per/mymodule.nim`
+4. Run `nim check src/nimphea/per/mymodule.nim` then `nimble test`
 
 ## Common Pitfalls
 
 ```nim
 # WRONG: Missing # for this pointer
 proc init*(x: var T) {.importcpp: "Init()".}
-
-# CORRECT: Correct
+# CORRECT:
 proc init*(x: var T) {.importcpp: "#.Init()".}
 
 # WRONG: Not exported, wrong type
 proc getValue(): int
-
-# CORRECT: Exported, C type
+# CORRECT:
 proc getValue*(): cint
 
 # WRONG: Macro before imports
 useNimpheaModules(adc)
-import per/adc
-
-# CORRECT: Imports first
-import per/adc
+import nimphea/per/adc
+# CORRECT:
+import nimphea/per/adc
 useNimpheaModules(adc)
 ```
 
@@ -183,22 +202,44 @@ useNimpheaModules(adc)
 - **Bare metal**: No OS, no dynamic allocation by default
 - **Real-time audio**: ~1ms callbacks (48 samples @ 48kHz)
 - **Stack over heap**: Prefer `array` over `seq` in audio callbacks
-- **No exceptions in hot paths**: Use `{.push raises: [].}`
+- **All RT callbacks must have `{.cdecl, raises: [].}`** — prevents Nim exception machinery from crossing C call boundaries on bare metal
+- **Use `assert` for invariants** — no exceptions in embedded paths
 
 ### Memory Management
 
 ```nim
-# CORRECT: GOOD - Static allocation
+# GOOD — static allocation
 var buffer: array[1024, float32]
 
-# CAUTION: AVOID in callbacks - Dynamic allocation
+# AVOID in callbacks — dynamic allocation
 var buffer = newSeq[float32](1024)
 
-# CORRECT: GOOD - Pre-allocate outside callback
+# GOOD — pre-allocate outside callback, use inside
 var phase = 0.0
-proc audioCallback(...) {.cdecl, raises: [].} =
+proc audioCallback(input, output: AudioBuffer, size: int) {.cdecl, raises: [].} =
   phase += phaseIncrement
 ```
+
+### CMSIS-DSP Self-Referential Pointer Pattern
+
+`Matrix[R,C]`, `FirFilter[NT,MB]`, and `BiquadFilter` embed a CMSIS instance struct with a `ptr` pointing into the object's own `array` buffer. **Always implement `=copy` and `=sink`** to rebind the pointer to the destination's buffer — default bitwise copy creates dangling pointers.
+
+```nim
+proc `=copy`*[NT, MB: static int](dest: var FirFilter[NT, MB], src: FirFilter[NT, MB]) =
+  dest.state = src.state
+  dest.instance = src.instance
+  dest.instance.pState = addr dest.state[0]  # rebind to dest's buffer
+```
+
+## Testing Strategy
+
+| Layer | Command | What it covers |
+|---|---|---|
+| Single file | `nim check examples/blink.nim` | Syntax + import resolution |
+| All examples | `nimble test` | 43 examples syntax-checked |
+| Pure-Nim units | `nimble test_unit` | FIFO, Stack, RingBuffer, FixedStr, MappedValue |
+
+C++-dependent modules cannot be unit-tested on the host — validate via `nimble make <example>` and hardware flashing.
 
 ## Formatting
 
@@ -209,7 +250,7 @@ proc audioCallback(...) {.cdecl, raises: [].} =
 
 ## References
 
-- **nimphea.nimble** - Build system
-- **docs/API_REFERENCE.md** - Complete API (85 modules)
-- **examples/** - 43 examples
+- **nimphea.nimble** - Build system and task definitions
+- **docs/API_REFERENCE.md** - Complete API reference (85 modules)
+- **nimphea-examples/** - 43 example programs
 - **libDaisy docs** - https://electro-smith.github.io/libDaisy
