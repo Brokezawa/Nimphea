@@ -175,6 +175,10 @@ task docs, "Generate API documentation":
   echo ""
   echo "Documentation generated successfully"
 
+task test, "Run all tests":
+  ## Master test task - runs unit tests.
+  exec "nimble test_unit"
+
 task test_unit, "Run unit tests on host computer":
   ## Run unit tests for Nimphea wrapper logic
   
