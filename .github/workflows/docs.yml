@@ -34,7 +34,7 @@ jobs:
       - name: Set up Nim
         uses: jiro4989/setup-nim-action@v2
         with:
-          nim-version: '2.0.0'
+          nim-version: '2.2.8'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
@@ -42,6 +42,24 @@ jobs:
 
       - name: Generate API docs
         run: nimble docs
+
+      - name: Convert markdown docs to HTML
+        run: |
+          # Landing page and root docs → docs/api/ (shares nimdoc.out.css from nimble docs)
+          nim md2html --outdir:docs/api/ docs/index.md
+          for f in docs/[A-Z]*.md; do
+            nim md2html --outdir:docs/api/ "$f"
+          done
+          # Guides → docs/api/guides/ (preserve subdirectory so relative paths match source)
+          mkdir -p docs/api/guides
+          cp docs/api/nimdoc.out.css docs/api/guides/
+          for f in docs/guides/*.md; do
+            nim md2html --outdir:docs/api/guides/ "$f"
+          done
+          # Fix .md links → .html in all generated HTML so both GitHub markdown
+          # preview (.md links in source) and GitHub Pages (.html links served) work
+          find docs/api/ -name "*.html" -exec \
+            sed -i 's/href="\([^"]*\)\.md\(["#?]\)/href="\1.html\2/g' {} +
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

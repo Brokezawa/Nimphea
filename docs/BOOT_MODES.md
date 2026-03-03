@@ -1,5 +1,9 @@
 # Boot Modes Guide
 
+[← Home](index.md)
+
+---
+
 This document explains the three boot modes supported by Nimphea and how to choose the right one for your project.
 
 ## Overview
@@ -378,6 +382,6 @@ nimble stlink
 
 ## References
 
-- [BUILD_SYSTEM.md](./BUILD_SYSTEM.md) - Compiler configuration details
-- [FLASH_GUIDE.md](./FLASH_GUIDE.md) - Flashing methods and tools
+- [Build System](./BUILD_SYSTEM.md) - Compiler configuration details
+- [Flashing Guide](./FLASH_GUIDE.md) - Flashing methods and tools
 - Templates: [Basic](https://github.com/Brokezawa/nimphea-template-basic) | [Audio](https://github.com/Brokezawa/nimphea-template-audio)

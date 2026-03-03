@@ -1,5 +1,9 @@
 # Contributing to Nimphea
 
+[← Home](index.md)
+
+---
+
 ## Development Setup
 
 ### 1. Prerequisites
@@ -530,7 +534,7 @@ Community hardware testing is essential to validate examples on different Daisy 
 - Test examples on your hardware and report results
 - Get credited in release notes!
 
-See [TESTING_GUIDE.md](TESTING_GUIDE.md) for detailed testing procedures.
+See the testing section in [Contributing Guide](CONTRIBUTING.md) for detailed testing procedures.
 
 ## Code Style Guidelines
 
@@ -844,7 +848,7 @@ When breaking changes are absolutely necessary:
 - `initAdc()` → `init()` (renamed for API consistency)
 - Old: `initAdc(hw, pin, channel)`
 - New: `var adc: AdcHandle; adc.init(pin, channel)`
-- Migration: See [MIGRATION_v2.md](MIGRATION_v2.md)
+- Migration: see the migration notes below for step-by-step guidance
 
 **Migration path:**
 - v1.8.0: Old API marked `{.deprecated.}`, new API available

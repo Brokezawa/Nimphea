@@ -1,5 +1,9 @@
 # Installation Guide
 
+[Home](../index.md) | [Installation](installation.md) | [Getting Started](getting-started.md) | [CMSIS-DSP](cmsis-dsp.md)
+
+---
+
 To develop with Nimphea, you need the ARM Embedded Toolchain and the Nim compiler.
 
 ## 1. Prerequisites

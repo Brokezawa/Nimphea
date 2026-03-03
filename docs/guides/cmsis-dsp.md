@@ -1,5 +1,9 @@
 # CMSIS-DSP Guide
 
+[Home](../index.md) | [Installation](installation.md) | [Getting Started](getting-started.md) | [CMSIS-DSP](cmsis-dsp.md)
+
+---
+
 Nimphea includes a comprehensive wrapper for ARM's **CMSIS-DSP** library, providing hardware-accelerated math functions optimized for the Cortex-M7 processor.
 
 ## Features

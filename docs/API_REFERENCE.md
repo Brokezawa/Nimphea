@@ -1,93 +1,87 @@
 # API Reference
 
+[← Home](index.md)
+
+
 Complete API reference for **Nimphea**, the Nim wrapper for libDaisy.
 This document covers all **98 modules** available in the library.
 
 ## Table of Contents
 
-1.  **[Core System](#core-system)**
-    *   [DaisySeed](#daisyseed-nimpheanim)
-    *   [System Utilities](#system-utilities-syssystemnim)
-    *   [Logging](#logger-hidloggernim)
-    *   [Unique ID](#unique-id-nimphea_uniqueidnim)
-    *   [CPU Load Meter](#cpu-load-meter-nimphea_cpuloadnim)
-    *   [Interrupt Handling](#scoped-irq-blocker-nimphea_scoped_irqnim)
-    *   [Panic Handler](#panic-handler-panicoverridenim)
+1.  [Core System](#core-system)
+    *   [DaisySeed](#daisyseed)
+    *   [System Utilities](#system-utilities)
+    *   [Logging](#logging)
+    *   [Unique ID](#unique-id)
+    *   [CPU Load Meter](#cpu-load-meter)
+    *   [Interrupt Handling](#scoped-irq-blocker)
+    *   [Panic Handler](#panic-handler)
 
-2.  **[Audio & Signal Processing](#audio--signal-processing)**
-    *   [Audio Handling](#audio-handling-nimpheanim)
-    *   [CMSIS-DSP](#cmsis-dsp-cmsisnim)
-    *   [WAV File Writer](#wav-file-writer-nimphea_wavwriternim)
-    *   [WAV File Player](#wav-file-player-nimphea_wavplayernim)
-    *   [WAV File Parser](#wav-file-parser-nimphea_wavparsernim)
-    *   [WAV Format](#wav-format-nimphea_wavformatnim)
-    *   [Wavetable Loader](#wavetable-loader-nimphea_wavetable_loadernim)
-    *   [SAI (Low Level)](#sai-module-nimphea_sainim)
+2.  [Audio and Signal Processing](#audio-and-signal-processing)
+    *   [Audio Handling](#audio-handling)
+    *   [CMSIS-DSP](#cmsis-dsp)
+    *   [WAV File Writer](#wav-file-writer)
+    *   [WAV File Player](#wav-file-player)
+    *   [WAV File Parser](#wav-file-parser)
+    *   [WAV Format](#wav-format)
+    *   [Wavetable Loader](#wavetable-loader)
+    *   [SAI (Low Level)](#sai-module)
 
-3.  **[Memory & Filesystem](#memory--filesystem)**
-    *   [FatFS](#fatfs-module-sysfatfsnim)
-    *   [SDRAM](#sdram-module-syssdramnim)
-    *   [DMA & Cache](#dma-cache-control-sysdmanim)
-    *   [Persistent Storage](#persistent-storage-nimphea_persistent_storagenim)
-    *   [File Reader](#file-reader-nimphea_filereadernim)
-    *   [File Table](#file-table-nimphea_filetablenim)
+3.  [Memory and Filesystem](#memory-and-filesystem)
+    *   [FatFS](#fatfs-module)
+    *   [SDRAM](#sdram-module)
+    *   [DMA & Cache](#dma-and-cache-control)
+    *   [Persistent Storage](#persistent-storage)
+    *   [File Reader](#file-reader)
+    *   [File Table](#file-table)
 
-4.  **[Peripherals](#peripherals)**
-    *   [ADC](#adc-module-peradcnim)
-    *   [DAC](#dac-module-perdacnim)
-    *   [GPIO](#gpio-module-nimpheanim)
-    *   [I2C](#i2c-module-peri2cnim)
-    *   [SPI](#spi-module-perspinim)
-    *   [Multi-Slave SPI](#multi-slave-spi-perspi_multislavenim)
-    *   [UART](#uart-module-peruartnim)
-    *   [PWM](#pwm-module-perpwmnim)
-    *   [Timer (TIM)](#hardware-timer-pertimnim)
-    *   [RNG](#rng-module-perrngnim)
-    *   [QSPI](#qspi-module-perqspinim)
-    *   [SDMMC](#sdmmc-module-persdmmcnim)
+4.  [Peripherals](#peripherals)
+    *   [ADC](#adc-module)
+    *   [DAC](#dac-module)
+    *   [GPIO](#gpio-module)
+    *   [I2C](#i2c-module)
+    *   [SPI](#spi-module)
+    *   [Multi-Slave SPI](#multi-slave-spi)
+    *   [UART](#uart-module)
+    *   [PWM](#pwm-module)
+    *   [Timer (TIM)](#hardware-timer)
+    *   [RNG](#rng-module)
+    *   [QSPI](#qspi-module)
+    *   [SDMMC](#sdmmc-module)
 
-5.  **[HID & Controls](#hid--controls)**
-    *   [Controls (Encoder, Analog)](#controls-module-hidctrlnim)
-    *   [Switch](#switch-module-hidswitchnim)
-    *   [3-Position Switch](#switch-3-pos-hidswitch3nim)
-    *   [LED](#led-module-hidlednim)
-    *   [RGB LED](#rgb-led-module-hidrgb_lednim)
-    *   [Parameter Mapping](#parameter-mapping-hidparameternim)
-    *   [Mapped Values](#mapped-values-nimphea_mapped_valuenim)
-    *   [Colors](#color-utilities-nimphea_colornim)
+5.  [HID and Controls](#hid-and-controls)
+    *   [Controls (Encoder, Analog)](#controls-module)
+    *   [Switch](#switch-module)
+    *   [3-Position Switch](#switch-3-pos)
+    *   [LED](#led-control)
+    *   [RGB LED](#rgb-led-control)
+    *   [Parameter Mapping](#parameter-mapping)
+    *   [Mapped Values](#mapped-values)
+    *   [Colors](#color-utilities)
 
-6.  **[Display Drivers](#display-drivers)**
-    *   [Graphics Common](#graphics-common-hiddispgraphics_commonnim)
-    *   [OLED SSD1306](#oled-ssd1306-hiddispoled_displaynim)
-    *   [OLED SH1106](#oled-sh1106-devoled_sh1106nim)
-    *   [OLED SSD1327](#oled-ssd1327-devoled_ssd1327nim)
-    *   [OLED SSD1351](#oled-ssd1351-devoled_ssd1351nim)
-    *   [LCD HD44780](#lcd-hd44780-devlcd_hd44780nim)
-    *   [OLED Fonts](#oled-fonts-utiloled_fontsnim)
-
-7.  **[Device Drivers](#device-drivers)**
+6.  [Device Drivers](#device-drivers)
     *   [Audio Codecs (AK4556, WM8731, PCM3060)](#codecs)
     *   [Sensors (IMU, Gesture, Pressure, Magnetic, Touch)](#sensors)
     *   [LED Drivers (PCA9685, DotStar, NeoPixel)](#led-drivers)
     *   [IO Expanders (MCP23017, Shift Registers, MAX11300)](#io-expanders)
+    *   [Display Drivers (OLED, LCD)](#displays)
 
-8.  **[UI Framework](#ui-framework)**
-    *   [UI Core](#ui-core-nimphea_ui_corenim)
-    *   [UI Events](#ui-events-nimphea_ui_eventsnim)
-    *   [UI Controls](#ui-controls-nimphea_ui_controlsnim)
-    *   [Menu System](#menu-system-nimphea_menunim)
+7.  [UI and Graphics](#ui-and-graphics)
+    *   [UI Core](#ui-core-system)
+    *   [UI Events](#ui-events)
+    *   [UI Controls](#ui-controls)
+    *   [Menu System](#menu-system)
 
-9.  **[Data Structures](#data-structures)**
-    *   [FIFO Queue](#fifo-queue-nimphea_fifonim)
-    *   [Ring Buffer](#ring-buffer-nimphea_ringbuffernim)
-    *   [Stack](#stack-nimphea_stacknim)
-    *   [FixedStr](#fixed-string-nimphea_fixedstrnim)
+8.  [Data Structures and Utils](#data-structures-and-utils)
+    *   [FIFO Queue](#fifo)
+    *   [Ring Buffer](#ringbuffer)
+    *   [Stack](#stack)
+    *   [FixedStr](#fixedstr)
 
----
 
 ## Core System
 
-### DaisySeed (nimphea.nim)
+### DaisySeed
 Main entry point for initialized the hardware and controlling the onboard LED and system timing.
 
 - `initDaisy(boost)` - Initializes the Daisy Seed board.
@@ -96,31 +90,30 @@ Main entry point for initialized the hardware and controlling the onboard LED an
 - `delay(ms)` - Blocking millisecond delay.
 - `now()` - Returns system time in seconds.
 
-### System Utilities (sys/system.nim)
+### System Utilities
 Low-level system configuration and bootloader access.
 
 - `resetToBootloader()` - Jump to the STM32 DFU bootloader.
 - `getFrequencies()` - Get CPU and bus frequencies.
 
-### Logging (hid/logger.nim)
+### Logging
 USB and UART serial logging.
 
 - `startLog(waitForPC)` - Starts the serial logger.
 - `print(text)` - Formatted print.
 - `printLine(text)` - Formatted print with newline.
 
----
 
-## Audio & Signal Processing
+## Audio and Signal Processing
 
-### Audio Handling (nimphea.nim)
+### Audio Handling
 High-level audio configuration and callback registration.
 
 - `startAudio(callback)` - Start audio processing with a non-interleaved callback.
 - `setSampleRate(rate)` - Set the SAI sample rate.
 - `setBlockSize(size)` - Set the audio block size.
 
-### CMSIS-DSP (cmsis.nim)
+### CMSIS DSP
 Hardware-accelerated math functions optimized for ARM Cortex-M7.
 
 - **Basic Math**: Vector add, sub, mult, scale, dot product.
@@ -132,12 +125,11 @@ Hardware-accelerated math functions optimized for ARM Cortex-M7.
 - **Fixed Point**: Q31 and Q15 optimized math.
 - **Interpolation**: Linear and bilinear lookup.
 
----
 
 
 # Core System
 
-## DaisySeed (`nimphea.nim`)
+## DaisySeed
 
 The main hardware abstraction for the Daisy Seed board.
 
@@ -175,7 +167,7 @@ hw.delay(1000)
 hw.toggleLed()
 ```
 
-## System Utilities (`sys/system.nim`)
+## System Utilities
 
 Low-level system control, clocks, and bootloader.
 
@@ -207,7 +199,7 @@ proc resetToBootloader*(mode: BootloaderMode = STM)
 proc getProgramMemoryRegion*(): MemoryRegion
 ```
 
-## Logger (`hid/logger.nim`)
+## Logger
 
 USB/UART logging facility. Appears as a serial port on the host computer.
 
@@ -218,7 +210,7 @@ proc printLine*(text: cstring)
 proc log*(msg: string)  # Nim-friendly wrapper
 ```
 
-## Unique ID (`nimphea_uniqueid.nim`)
+## Unique ID
 
 Read the STM32 96-bit unique factory identifier.
 
@@ -230,7 +222,7 @@ proc getUniqueId*(): UniqueId
 proc getUniqueIdString*(): string  # Format: "XXXXXXXX-XXXXXXXX-XXXXXXXX"
 ```
 
-## CPU Load Meter (`nimphea_cpuload.nim`)
+## CPU Load Meter
 
 Measure audio callback performance.
 
@@ -244,7 +236,7 @@ proc getMaxCpuLoad*(this: CpuLoadMeter): float32
 proc reset*(this: var CpuLoadMeter)
 ```
 
-## Scoped IRQ Blocker (`nimphea_scoped_irq.nim`)
+## Scoped IRQ Blocker
 
 RAII-style interrupt disabling for critical sections.
 
@@ -253,15 +245,14 @@ template withoutInterrupts*(body: untyped)
 template criticalSection*(body: untyped)
 ```
 
-## Panic Handler (`panicoverride.nim`)
+## Panic Handler
 
 Custom panic handler for bare-metal environment. Overrides default Nim panic behavior (which would try to print to stdout/stderr). Used internally.
 
----
 
-# Audio & Signal Processing
+# Audio and Signal Processing
 
-## Audio Handling (`nimphea.nim`)
+## Audio Handling
 
 **Types:**
 ```nim
@@ -296,7 +287,7 @@ while true:
   discard  # Audio runs in background
 ```
 
-## WAV File Writer (`nimphea_wavwriter.nim`)
+## WAV File Writer
 
 Record audio to SD card.
 
@@ -314,7 +305,7 @@ proc saveFile*(writer: var WavWriter)
 proc isRecording*(writer: WavWriter): bool
 ```
 
-## WAV File Player (`nimphea_wavplayer.nim`)
+## WAV File Player
 
 Stream audio from SD card.
 
@@ -330,7 +321,7 @@ proc getPosition*(player: WavPlayer): uint32
 proc setPlaying*(player: var WavPlayer, state: bool)
 ```
 
-## WAV File Parser (`nimphea_wavparser.nim`)
+## WAV File Parser
 
 Read WAV headers without loading data.
 
@@ -341,7 +332,7 @@ proc dataOffset*(parser: WavParser): uint32
 proc dataSize*(parser: WavParser): uint32
 ```
 
-## WAV Format (`nimphea_wavformat.nim`)
+## WAV Format
 
 WAV file format constants and structures.
 
@@ -353,7 +344,7 @@ type WavFormatTypeDef* = object
   BlockAlign*, BitPerSample*: uint16
 ```
 
-## Wavetable Loader (`nimphea_wavetable_loader.nim`)
+## Wavetable Loader
 
 Load multiple wavetables from a single WAV file into memory.
 
@@ -364,7 +355,7 @@ proc import*(loader: var WaveTableLoader, filename: cstring): WaveTableResult
 proc getTable*(loader: var WaveTableLoader, idx: csize_t): ptr cfloat
 ```
 
-## SAI Module (`nimphea_sai.nim`)
+## SAI Module
 
 Low-level Serial Audio Interface control.
 
@@ -375,11 +366,10 @@ proc stopDma*(sai: var SaiHandle): SaiResult
 proc getSampleRate*(sai: SaiHandle): float
 ```
 
----
 
-# Memory & Filesystem
+# Memory and Filesystem
 
-## FatFS Module (`sys/fatfs.nim`)
+## FatFS Module
 
 Filesystem support for SD cards and USB drives.
 
@@ -394,7 +384,7 @@ proc getSDPath*(fatfs: FatFSInterface): cstring
 proc getUSBPath*(fatfs: FatFSInterface): cstring
 ```
 
-## SDRAM Module (`sys/sdram.nim`)
+## SDRAM Module
 
 Access 64MB external SDRAM.
 
@@ -408,7 +398,7 @@ proc clearSdramBss*()
 proc getMemoryInfo*(): SdramMemoryInfo
 ```
 
-## DMA & Cache Control (`sys/dma.nim`)
+## DMA and Cache Control
 
 Manage CPU cache coherency for DMA transfers.
 
@@ -419,7 +409,7 @@ proc dmaClearCacheFor*(p: pointer, size: int)
 proc dmaInvalidateCacheFor*(p: pointer, size: int)
 ```
 
-## Persistent Storage (`nimphea_persistent_storage.nim`)
+## Persistent Storage
 
 Type-safe settings storage in QSPI flash.
 
@@ -433,7 +423,7 @@ proc getSettings*[T](this: var PersistentStorage[T]): var T
 proc getState*[T](this: PersistentStorage[T]): StorageState
 ```
 
-## File Reader (`nimphea_filereader.nim`)
+## File Reader
 
 Wrapper for reading files from FatFS.
 
@@ -444,11 +434,10 @@ proc seek*(this: var FileReader, pos: uint32): bool
 proc size*(this: FileReader): uint32
 ```
 
----
 
 # Peripherals
 
-## ADC Module (`per/adc.nim`)
+## ADC Module
 
 Analog-to-Digital Converter.
 
@@ -484,7 +473,7 @@ let rawValue = adc.get(0)       # 0-65535
 let floatValue = adc.getFloat(0) # 0.0-1.0
 ```
 
-## DAC Module (`per/dac.nim`)
+## DAC Module
 
 Digital-to-Analog Converter (on-chip).
 
@@ -495,7 +484,7 @@ proc init*(dac: var DacHandle, config: DacConfig): DacResult
 proc writeValue*(dac: var DacHandle, chn: DacChannel, val: uint16)
 ```
 
-## GPIO Module (`nimphea.nim`)
+## GPIO Module
 
 General Purpose I/O.
 
@@ -506,7 +495,7 @@ proc read*(gpio: var GPIO): bool
 proc toggle*(gpio: var GPIO)
 ```
 
-## I2C Module (`per/i2c.nim`)
+## I2C Module
 
 Inter-Integrated Circuit bus.
 
@@ -518,7 +507,7 @@ proc transmitDma*(i2c: var I2CHandle, address: uint16, buffer: var openArray[uin
 proc receiveDma*(i2c: var I2CHandle, address: uint16, buffer: var openArray[uint8], callback: I2CCallback, ctx: pointer)
 ```
 
-## SPI Module (`per/spi.nim`)
+## SPI Module
 
 Serial Peripheral Interface.
 
@@ -530,7 +519,7 @@ proc dmaTransmit*(spi: var SpiHandle, buffer: openArray[uint8], ...)
 proc dmaReceive*(spi: var SpiHandle, buffer: var openArray[uint8], ...)
 ```
 
-## Multi-Slave SPI (`per/spi_multislave.nim`)
+## Multi Slave SPI
 
 SPI bus shared by multiple devices with individual Chip Selects.
 
@@ -540,7 +529,7 @@ proc blockingTransmit*(spi: var MultiSlaveSpiHandle, device_index: int, data: op
 proc blockingReceive*(spi: var MultiSlaveSpiHandle, device_index: int, data: var openArray[uint8])
 ```
 
-## UART Module (`per/uart.nim`)
+## UART Module
 
 Universal Asynchronous Receiver/Transmitter.
 
@@ -550,7 +539,7 @@ proc blockingTransmit*(uart: var UartHandler, data: openArray[uint8])
 proc blockingReceive*(uart: var UartHandler, buffer: var openArray[uint8])
 ```
 
-## PWM Module (`per/pwm.nim`)
+## PWM Module
 
 Pulse Width Modulation.
 
@@ -562,7 +551,7 @@ proc init*(chan: var PwmChannel, pin: Pin)
 proc set*(chan: var PwmChannel, duty: float) # 0.0-1.0
 ```
 
-## Hardware Timer (`per/tim.nim`)
+## Hardware Timer
 
 High-resolution hardware timers (TIM2-TIM5).
 
@@ -575,7 +564,7 @@ proc delayUs*(timer: var TimerHandle, us: uint32)
 proc setCallback*(timer: var TimerHandle, cb: TimerCallback)
 ```
 
-## RNG Module (`per/rng.nim`)
+## RNG Module
 
 True Random Number Generator.
 
@@ -585,7 +574,7 @@ proc randomGetFloat*(min, max: cfloat): cfloat
 proc randomIsReady*(): bool
 ```
 
-## QSPI Module (`per/qspi.nim`)
+## QSPI Module
 
 Quad-SPI Flash interface.
 
@@ -595,7 +584,7 @@ proc write*(qspi: var QSPIHandle, address: uint32, size: uint32, buffer: ptr uin
 proc eraseSector*(qspi: var QSPIHandle, address: uint32)
 ```
 
-## SDMMC Module (`per/sdmmc.nim`)
+## SDMMC Module
 
 SD Card hardware interface. Typically used via FatFS.
 
@@ -605,11 +594,10 @@ proc readBlocks*(sd: var SdmmcHandler, address: uint32, buffer: ptr uint8, count
 proc writeBlocks*(sd: var SdmmcHandler, address: uint32, buffer: ptr uint8, count: uint32): SdmmcResult
 ```
 
----
 
-# HID & Controls
+# HID and Controls
 
-## Controls Module (`hid/ctrl.nim`)
+## Controls Module
 
 **Encoder:**
 ```nim
@@ -626,7 +614,7 @@ proc process*(ctrl: var AnalogControl): float
 proc value*(ctrl: AnalogControl): float
 ```
 
-## Switch Module (`hid/switch.nim`)
+## Switch Module
 
 Momentary/Latching Switch with Debouncing.
 
@@ -638,7 +626,7 @@ proc risingEdge*(sw: Switch): bool
 proc timeHeldMs*(sw: Switch): float
 ```
 
-## Switch 3-Pos (`hid/switch3.nim`)
+## Switch 3 Pos
 
 3-position switch (ON-OFF-ON).
 
@@ -647,14 +635,14 @@ proc init*(sw: var Switch3, pinA, pinB: Pin)
 proc read*(sw: var Switch3): cint  # 0=Center, 1=Up, 2=Down
 ```
 
-## Parameter Mapping (`hid/parameter.nim`)
+## Parameter Mapping
 
 ```nim
 type Curve* = enum LINEAR, EXPONENTIAL, LOGARITHMIC, CUBE
 proc mapParameter*(input: float32, min, max: float32, curve: Curve): float32
 ```
 
-## Gate Input (`hid/gatein.nim`)
+## Gate Input
 
 ```nim
 proc init*(gate: var GateIn, pin: Pin, invert: bool)
@@ -662,7 +650,7 @@ proc trig*(gate: var GateIn): bool
 proc state*(gate: var GateIn): bool
 ```
 
-## LED Control (`hid/led.nim`)
+## LED Control
 
 Single LED with software PWM.
 
@@ -672,7 +660,7 @@ proc set*(led: var Led, brightness: float)
 proc update*(led: var Led)
 ```
 
-## RGB LED Control (`hid/rgb_led.nim`)
+## RGB LED Control
 
 3-channel LED control.
 
@@ -683,7 +671,7 @@ proc setColor*(rgb: var RgbLed, c: Color)
 proc update*(rgb: var RgbLed)
 ```
 
-## MIDI Module (`hid/midi.nim`)
+## MIDI Module
 
 **USB MIDI:**
 ```nim
@@ -700,7 +688,7 @@ proc initMidiUart*(midi: var MidiUartHandler, config: MidiUartHandlerConfig)
 # Methods same as USB MIDI
 ```
 
-## USB Module (`hid/usb.nim`)
+## USB Module
 
 **USB CDC (Serial):**
 ```nim
@@ -716,7 +704,7 @@ proc init*(host: var USBHostHandle, config: var USBHostConfig): USBHostResult
 proc process*(host: var USBHostHandle): USBHostResult
 ```
 
-## Shift Register (Nim) (`nimphea_shift_register.nim`)
+## Shift Register (Nim)
 
 High-level Nim wrapper for CD4021 shift registers. Provides type-safe configurations for common device counts (1-4 chained, 1-2 parallel lines).
 
@@ -747,11 +735,10 @@ proc state*(sr: ShiftRegister4021_N, index: cint): bool
 proc pressed*(sr: ShiftRegister4021_N, index: cint): bool  # Active-low helper
 ```
 
----
 
-# UI & Graphics
+# UI and Graphics
 
-## UI Core System (`nimphea_ui_core.nim`)
+## UI Core System
 
 ```nim
 proc initUI*(): UI
@@ -760,7 +747,7 @@ proc openPage*(ui: var UI, page: var UiPage)
 proc process*(ui: var UI)
 ```
 
-## Menu System (`nimphea_menu.nim`)
+## Menu System
 
 ```nim
 proc initFullScreenMenu*(items: var openArray[MenuItemConfig]): FullScreenItemMenu
@@ -768,7 +755,7 @@ proc createValueItemFloat*(text: string, valuePtr: ptr MappedFloatValue): MenuIt
 proc createCloseItem*(text: cstring): MenuItemConfig
 ```
 
-## Menu Builder DSL (`ui/menu_builder.nim`)
+## Menu Builder DSL
 
 Macros for defining menus statically.
 
@@ -780,7 +767,7 @@ defineMenu myMenu:
   close "Back"
 ```
 
-## UI Controls (`nimphea_ui_controls.nim`)
+## UI Controls
 
 Templates for event-based monitoring.
 
@@ -789,7 +776,7 @@ template createButtonMonitor*[B; N](backend: B, n: int)
 template createPotMonitor*[B; N](backend: B, n: int)
 ```
 
-## UI Events (`nimphea_ui_events.nim`)
+## UI Events
 
 Thread-safe event queue.
 
@@ -799,7 +786,7 @@ proc addButtonPressed*(queue: var UiEventQueue, id: uint16, presses: uint16)
 proc getAndRemoveNextEvent*(queue: var UiEventQueue): Event
 ```
 
-## Event Helpers (`ui/events.nim`)
+## Event Helpers
 
 Closure-based event dispatcher.
 
@@ -809,7 +796,7 @@ proc onButtonPress*(dispatcher: var EventDispatcher, handler: ButtonHandler)
 proc process*(dispatcher: var EventDispatcher)
 ```
 
-## OLED Display (SSD130x) (`hid/disp/oled_display.nim`)
+## OLED Display (SSD130x)
 
 Base support for SSD1306/SH1106 displays.
 
@@ -822,7 +809,7 @@ proc drawPixel*(display: var OledDisplay, x, y: int, on: bool)
 proc update*(display: var OledDisplay)
 ```
 
-## Display Concepts (`ui/display.nim`)
+## Display Concepts
 
 Generic display concepts and templates.
 
@@ -831,7 +818,7 @@ template withDisplay*(display: var auto, body: untyped)
 template clearAndDraw*(display: var auto, body: untyped)
 ```
 
-## Graphics Primitives (`hid/disp/graphics_common.nim`)
+## Graphics Primitives
 
 Rectangle and alignment types.
 
@@ -841,11 +828,11 @@ proc getCenterX*(r: Rectangle): int16
 proc withCenter*(r: Rectangle, cx, cy: int16): Rectangle
 ```
 
-## Fonts (`util/oled_fonts.nim`)
+## Fonts
 
 Bitmap fonts: `Font_4x6`, `Font_6x8`, `Font_7x10`, `Font_11x18`, `Font_16x26`.
 
-## Color Utilities (`nimphea_color.nim`)
+## Color Utilities
 
 ```nim
 proc createColor*(r, g, b: cfloat): Color
@@ -853,7 +840,7 @@ proc colorBlend*(a, b: Color, amt: cfloat): Color
 proc setRed*(c: var Color, val: cfloat)
 ```
 
-## Mapped Values (`nimphea_mapped_value.nim`)
+## Mapped Values
 
 ```nim
 proc createMappedFloatValue*(min, max, default: float, ...): MappedFloatValue
@@ -861,11 +848,10 @@ proc get*(v: var MappedFloatValue): cfloat
 proc set*(v: var MappedFloatValue, val: cfloat)
 ```
 
----
 
 # Board Support
 
-## Daisy Patch (`boards/daisy_patch.nim`)
+## Daisy Patch
 - `display`: OledDisplay128x64Spi
 - `encoder`: Encoder
 - `gate_in` / `gate_out`: Gate I/O
@@ -873,52 +859,51 @@ proc set*(v: var MappedFloatValue, val: cfloat)
 - `knob`: Array of 4 AnalogControl
 - `processAnalogControls()`, `processDigitalControls()`
 
-## Daisy Patch SM (`boards/daisy_patch_sm.nim`)
+## Daisy Patch SM
 - `getAdcValue(idx)`: Read CV/ADC (0.0-1.0)
 - `writeCvOut(chn, val)`: Write DAC (0-5V)
 - `gate_in_1`, `gate_in_2`, `gate_out_1`, `gate_out_2`
 - `startAdc()`, `startDac()`
 
-## Daisy Pod (`boards/daisy_pod.nim`)
+## Daisy Pod
 - `led1`, `led2`: RGB LEDs
 - `knob1`, `knob2`: AnalogControl
 - `button1`, `button2`: Switch
 - `encoder`: Encoder
 - `processAllControls()`
 
-## Daisy Field (`boards/daisy_field.nim`)
+## Daisy Field
 - `keyboardState(idx)`: Read touch keys
 - `led_driver`: PCA9685 driver for 26 LEDs
 - `gate_in`, `gate_out`, `cv`, `knob`, `sw`
 - `display`: OLED
 
-## Daisy Petal (`boards/daisy_petal.nim`)
+## Daisy Petal
 - `switches`: 7 switches (4 foot, 3 toggle)
 - `ring_led`: 8 RGB LEDs
 - `footswitch_led`: 4 LEDs
 - `expression`: Pedal input
 - `knob`: 6 knobs
 
-## Daisy Versio (`boards/daisy_versio.nim`)
+## Daisy Versio
 - `knobs`: 7 CV/Knobs
 - `leds`: 4 RGB LEDs
 - `tap`: Momentary switch
 - `sw`: 2 Toggle switches
 - `gate`: Gate input
 
-## Daisy Legio (`boards/daisy_legio.nim`)
+## Daisy Legio
 - `encoder`: With button
 - `leds`: 2 RGB LEDs
 - `controls`: 3 CV (Pitch + 2 Knobs)
 - `sw`: 2 Toggle switches
 
----
 
 # Device Drivers
 
 ## Sensors
 
-### APDS9960 (`dev/apds9960.nim`)
+### APDS9960
 Gesture, Proximity, Color, Light sensor.
 ```nim
 proc init*(sensor: var Apds9960I2C, config: Apds9960Config)
@@ -927,7 +912,7 @@ proc readProximity*(sensor: var Apds9960I2C): uint8
 proc getColorData*(sensor: var Apds9960I2C, r, g, b, c: ptr uint16)
 ```
 
-### DPS310 (`dev/dps310.nim`)
+### DPS310
 Barometric Pressure & Altitude sensor.
 ```nim
 proc init*(sensor: var Dps310I2C, config: Dps310I2CConfig)
@@ -936,7 +921,7 @@ proc getTemperature*(sensor: var Dps310I2C): float
 proc getAltitude*(sensor: var Dps310I2C, seaLevel: float): float
 ```
 
-### ICM20948 (`dev/icm20948.nim`)
+### ICM20948
 9-Axis IMU (Accel, Gyro, Mag).
 ```nim
 proc init*(imu: var Icm20948I2C, config: Icm20948I2CConfig)
@@ -945,7 +930,7 @@ proc getGyroVect*(imu: var Icm20948I2C): Icm20948Vect
 proc getMagVect*(imu: var Icm20948I2C): Icm20948Vect
 ```
 
-### TLV493D (`dev/tlv493d.nim`)
+### TLV493D
 3D Magnetic Sensor.
 ```nim
 proc init*(sensor: var Tlv493dI2C, config: Tlv493dConfig)
@@ -955,7 +940,7 @@ proc getX*(sensor: var Tlv493dI2C): float
 
 ## LED Drivers
 
-### NeoPixel Driver (`dev/neopixel.nim`)
+### NeoPixel Driver
 Control WS2812B LEDs via I2C bridge.
 ```nim
 proc init*(neo: var NeoPixelI2C, config: NeoPixelI2CConfig)
@@ -963,7 +948,7 @@ proc setPixelColor*(neo: var NeoPixelI2C, n: uint16, r, g, b: uint8)
 proc show*(neo: var NeoPixelI2C)
 ```
 
-### DotStar Driver (`dev/dotstar.nim`)
+### DotStar Driver
 APA102/SK9822 SPI LEDs.
 ```nim
 proc init*(ds: var DotStarSpi, config: DotStarConfig)
@@ -971,7 +956,7 @@ proc setPixelColor*(ds: var DotStarSpi, idx: uint16, color: Color)
 proc show*(ds: var DotStarSpi)
 ```
 
-### LED Driver PCA9685 (`dev/leddriver.nim`)
+### LED Driver PCA9685
 16-channel 12-bit PWM LED driver (I2C).
 ```nim
 proc init*[N, P](driver: var LedDriverPca9685[N, P], ...)
@@ -979,9 +964,9 @@ proc setLed*(driver: var LedDriverPca9685, idx: int, brightness: float32)
 proc swapBuffersAndTransmit*(driver: var LedDriverPca9685): bool
 ```
 
-## Input & IO
+## IO Expanders
 
-### MPR121 Touch (`dev/mpr121.nim`)
+### MPR121 Touch
 12-channel capacitive touch sensor.
 ```nim
 proc init*(mpr: var Mpr121I2C, config: Mpr121Config)
@@ -989,7 +974,7 @@ proc touched*(mpr: var Mpr121I2C): uint16
 proc filteredData*(mpr: var Mpr121I2C, ch: uint8): uint16
 ```
 
-### NeoTrellis (`dev/neotrellis.nim`)
+### NeoTrellis
 4x4 RGB Button Pad.
 ```nim
 proc init*(trellis: var NeoTrellisI2C, config: NeoTrellisConfig)
@@ -997,7 +982,7 @@ proc activateKey*(trellis: var NeoTrellisI2C, x, y, edge: uint8, enable: bool)
 proc getRising*(trellis: var NeoTrellisI2C, idx: uint8): bool
 ```
 
-### MCP23x17 (`dev/mcp23x17.nim`)
+### MCP23x17
 16-bit GPIO Expander.
 ```nim
 proc init*(mcp: var Mcp23017, config: Mcp23017Config)
@@ -1006,7 +991,7 @@ proc digitalWrite*(mcp: var Mcp23017, port: MCPPort, val: uint8)
 proc read*(mcp: var Mcp23017): uint16
 ```
 
-### MAX11300 (`dev/max11300.nim`)
+### MAX11300
 20-port Mixed Signal IO (ADC/DAC/GPIO).
 ```nim
 proc init*[N](max: var MAX11300[N], config: MAX11300Config)
@@ -1014,7 +999,7 @@ proc configurePinAsAnalogRead*(max: var MAX11300, dev, pin, range)
 proc readAnalogPinVolts*(max: var MAX11300, dev, pin): float32
 ```
 
-### Shift Register 4021 (`dev/sr4021.nim`)
+### Shift Register 4021
 Input shift register (e.g. CD4021).
 ```nim
 proc init*[ND, NP](sr: var ShiftRegister4021[ND, NP], config: ShiftRegister4021Config)
@@ -1022,7 +1007,7 @@ proc update*(sr: var ShiftRegister4021)
 proc state*(sr: ShiftRegister4021, idx: int): bool
 ```
 
-### Shift Register 595 (`dev/sr595.nim`)
+### Shift Register 595
 Output shift register (e.g. 74HC595).
 ```nim
 proc init*(sr: var ShiftRegister595, pin_cfg: ptr Pin, num: csize_t)
@@ -1032,28 +1017,28 @@ proc write*(sr: var ShiftRegister595)
 
 ## Displays
 
-### SSD1351 Color OLED (`dev/oled_ssd1351.nim`)
+### SSD1351 Color OLED
 128x128 RGB.
 ```nim
 template initSSD1351Spi*(width, height: static[int], ...): untyped
 proc setColorRGB*(disp: var SSD1351Spi128x128, r, g, b: uint8)
 ```
 
-### SSD1327 Grayscale OLED (`dev/oled_ssd1327.nim`)
+### SSD1327 Grayscale OLED
 128x128 4-bit Grayscale.
 ```nim
 template initSSD1327Spi*(width, height: static[int], ...): untyped
 proc setGrayscale*(disp: var SSD1327Spi128x128, level: uint8)
 ```
 
-### SH1106 OLED (`dev/oled_sh1106.nim`)
+### SH1106 OLED
 128x64 Monochrome (compatible with SSD1306).
 ```nim
 template initSH1106I2c*(width, height: static[int], ...): untyped
 template initSH1106Spi*(width, height: static[int], ...): untyped
 ```
 
-### HD44780 LCD (`dev/lcd_hd44780.nim`)
+### HD44780 LCD
 Character LCD (16x2, 20x4).
 ```nim
 proc init*(lcd: var LcdHD44780, config: LcdHD44780Config)
@@ -1061,66 +1046,65 @@ proc print*(lcd: var LcdHD44780, text: cstring)
 proc setCursor*(lcd: var LcdHD44780, row, col: uint8)
 ```
 
-## Audio Codecs
+## Codecs
 
-### AK4556 (`dev/codec_ak4556.nim`)
+### AK4556
 Simple 24-bit codec (Daisy Seed 1.0).
 ```nim
 proc init*(codec: var Ak4556, resetPin: Pin)
 ```
 
-### PCM3060 (`dev/codec_pcm3060.nim`)
+### PCM3060
 High-performance 24-bit codec (Daisy Seed 2).
 ```nim
 proc init*(codec: var Pcm3060, i2c: I2CHandle)
 ```
 
-### WM8731 (`dev/codec_wm8731.nim`)
+### WM8731
 Flexible codec with I2C control (Daisy Seed 1.1).
 ```nim
 proc init*(codec: var Wm8731, config: Wm8731Config, i2c: I2CHandle)
 ```
 
----
 
-# Data Structures & Utils
+# Data Structures and Utils
 
-## FileTable (`nimphea_filetable.nim`)
+## File Table
 Index files on storage.
 ```nim
 proc fill*(table: var FileTable[N], path: cstring, suffix: cstring)
 proc getFileName*(table: FileTable[N], idx: csize_t): cstring
 ```
 
-## Stack (`nimphea_stack.nim`)
+## Stack
 Fixed-capacity LIFO.
 ```nim
 proc push*(stack: var Stack[N, T], val: T): bool
 proc pop*(stack: var Stack[N, T], val: var T): bool
 ```
 
-## FIFO (`nimphea_fifo.nim`)
+## FIFO
 Fixed-capacity FIFO queue.
 ```nim
 proc push*(fifo: var Fifo[N, T], val: T): bool
 proc pop*(fifo: var Fifo[N, T], val: var T): bool
 ```
 
-## RingBuffer (`nimphea_ringbuffer.nim`)
+## RingBuffer
 Circular buffer for streaming.
 ```nim
 proc write*(rb: var RingBuffer[N, T], val: T): bool
 proc read*(rb: var RingBuffer[N, T], val: var T): bool
 ```
 
-## FixedStr (`nimphea_fixedstr.nim`)
+## FixedStr
 Stack-allocated string.
 ```nim
 proc add*(s: var FixedStr[N], c: char)
 proc clear*(s: var FixedStr[N])
 ```
 
-## V/Oct Calibration (`nimphea_voct_calibration.nim`)
+## V/Oct Calibration
 
 1V/octave calibration for musical pitch CV (Control Voltage) inputs. Converts ADC readings to MIDI note numbers for accurate pitch tracking in Eurorack applications.
 
@@ -1156,7 +1140,7 @@ proc midiNoteToFreq*(midiNote: float32): float32
 proc midiNoteToName*(midiNote: int): string
 ```
 
-## Macros (`nimphea_macros.nim`)
+## Macros
 C++ Interop macro system. Used internally by wrappers to generate C++ code.
 - `useNimpheaNamespace()`
 - `useNimpheaModules()`

@@ -1,17 +1,19 @@
 # Nim-Specific Features in Nimphea
 
+[← Home](index.md)
+
+
 This document highlights features and advantages unique to the Nim wrapper that go beyond a simple C++ binding.
 
 ## Table of Contents
 
 - [Memory Safety](#memory-safety)
-- [Nim-Native Data Structures](#nim-native-data-structures)
+- [Nim Native Data Structures](#nim-native-data-structures)
 - [Language Features](#language-features)
 - [Developer Experience](#developer-experience)
 - [Type Safety](#type-safety)
 - [Performance Characteristics](#performance-characteristics)
 
----
 
 ## Memory Safety
 
@@ -48,7 +50,6 @@ when defined(danger):
 - **Safe**: Compiler enforces size limits at compile time
 - **Predictable**: No memory fragmentation
 
----
 
 ### ARC Memory Management
 
@@ -93,9 +94,8 @@ proc goodAudioCallback(input, output: ptr ptr cfloat, size: int) {.cdecl.} =
 
 **Note:** Nim's type system makes it easy to choose safe types, but detecting all heap allocations requires careful use of stack-allocated containers and type restrictions. This is similar to using `alloca()` or stack containers in C++.
 
----
 
-## Nim-Native Data Structures
+## Nim Native Data Structures
 
 Instead of wrapping C++ STL templates, Nimphea provides **pure Nim implementations** designed specifically for embedded use.
 
@@ -123,7 +123,7 @@ fifo.PopFront(&val);           // Pointer-based API
 
 **Nimphea:**
 ```nim
-import src/util/fifo
+import nimphea
 
 var fifo: FIFO[float, 128]  # Generic, type-safe
 fifo.write(42.0)            # Nim naming conventions
@@ -155,7 +155,7 @@ var name = "Daisy"  # Heap allocated - NOT safe in audio callbacks!
 
 **The Solution:**
 ```nim
-import src/util/fixedstr
+import nimphea
 
 var name: FixedStr[32]  # Stack allocated, max 32 chars
 name = "Daisy Seed"     # No heap allocation!
@@ -194,7 +194,7 @@ usbLogger.print(log)
 **Optimized for audio applications:**
 
 ```nim
-import src/util/ringbuffer
+import nimphea
 
 # Lock-free, single-producer single-consumer
 var rb: RingBuffer[AudioSample, 1024]
@@ -222,7 +222,7 @@ while not rb.isEmpty():
 **Type-safe, bounded stack:**
 
 ```nim
-import src/util/stack
+import nimphea
 
 var history: Stack[MidiNote, 16]  # Max 16 notes
 
@@ -236,7 +236,6 @@ if not history.isEmpty():
   echo "Last note: ", lastNote.note
 ```
 
----
 
 ## Language Features
 
@@ -329,7 +328,6 @@ mainMenu.items[3] = closeItem("Exit")
 mainMenu.menu = initFullScreenItemMenu(mainMenu.items)
 ```
 
----
 
 ### Templates: Zero-Cost Abstractions
 
@@ -379,7 +377,6 @@ proc audioCallback(input, output: ptr ptr cfloat, size: int) {.cdecl.} =
 - Code reuse without performance cost
 - Hygienic (no variable capture issues)
 
----
 
 ### Generics vs C++ Templates
 
@@ -433,7 +430,6 @@ proc process[T: Startable](value: var T) =
 - **Explicit constraints**: Document requirements
 - **Faster compilation**: Reduced instantiation explosion (Nim & C++20 concepts)
 
----
 
 ## Developer Experience
 
@@ -488,7 +484,6 @@ when isMainModule:
 - Built-in module system
 - No semicolons
 
----
 
 ### Better Error Messages
 
@@ -509,7 +504,6 @@ Error: type mismatch: got <int> but expected 'float'
 Hint: convert with 42.0 or 42.cfloat
 ```
 
----
 
 ### Uniform Function Call Syntax (UFCS)
 
@@ -534,7 +528,6 @@ hw.setLed(true)      # Method syntax
 setLed(hw, true)     # Function syntax - both work!
 ```
 
----
 
 ### Compile-Time Function Execution (CTFE)
 
@@ -603,7 +596,6 @@ void audioCallback(float** input, float** output, size_t size) {
 
 **Note:** Modern C++ (C++20+) supports most compile-time code generation via constexpr. Nim's CTFE is more general and flexible, but both achieve the goal of zero-cost initialization.
 
----
 
 ## Type Safety
 
@@ -676,7 +668,6 @@ if maybeEvent.isSome:
 # No null pointer crashes!
 ```
 
----
 
 ## Performance Characteristics
 
@@ -738,7 +729,6 @@ proc process[T](control: var T) =
   # Code specialized for each type - no runtime checks!
 ```
 
----
 
 ## Conclusion
 
@@ -757,10 +747,9 @@ These features combine to create a **safer, more expressive, and equally perform
 
 This document highlights Nim's strengths. Modern C++ (especially C++20+) has evolved significantly and now provides many similar features (concepts, constexpr, structured bindings, etc.). The advantage of Nimphea is **consistent availability across all versions** and **simpler syntax** for these features, not necessarily unique capabilities. Both languages are capable for embedded audio work—Nim simply prioritizes these patterns as first-class features.
 
----
 
 **Next Steps:**
 
-- See [API_REFERENCE.md](API_REFERENCE.md) for complete API documentation
-- See [EXAMPLES.md](EXAMPLES.md) for practical usage examples
-- See [BUILD_SYSTEM.md](BUILD_SYSTEM.md) for build instructions
+- See [API Reference](API_REFERENCE.md) for complete API documentation
+- See the [Nimphea Examples](https://github.com/Brokezawa/nimphea-examples) repository for practical usage examples
+- See [Build System](BUILD_SYSTEM.md) for build instructions

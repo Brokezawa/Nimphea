@@ -1,5 +1,9 @@
 # Getting Started
 
+[Home](../index.md) | [Installation](installation.md) | [Getting Started](getting-started.md) | [CMSIS-DSP](cmsis-dsp.md)
+
+---
+
 This guide will help you create and build your first Nimphea project.
 
 ## 1. Create a Project from Template
@@ -47,6 +51,6 @@ This will:
 
 ## 5. Next Steps
 
-- Explore the **[Nimphea Examples](https://github.com/Brokezawa/nimphea-examples)** for more complex use cases.
-- Check the **[API Reference](../api/theindex.html)** for module documentation.
-- Read the **[CMSIS-DSP Guide](cmsis-dsp.md)** for high-performance audio processing.
+- Explore the [Nimphea Examples](https://github.com/Brokezawa/nimphea-examples) for more complex use cases.
+- Check the [API Reference](../theindex.html) for module documentation.
+- Read the [CMSIS-DSP Guide](cmsis-dsp.html) for high-performance audio processing.

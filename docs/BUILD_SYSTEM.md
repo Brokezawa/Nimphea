@@ -1,5 +1,8 @@
 # Build System Documentation
 
+[← Home](index.md)
+
+
 Nimphea uses a pure Nimble-based build system for cross-compiling Nim code to ARM Cortex-M7 (Daisy Seed hardware). This approach eliminates the need for complex Makefiles in your projects.
 
 ## Requirements
@@ -48,7 +51,7 @@ Flashes the `main.elf` file via an ST-Link probe using `openocd`. This method is
 
 ## Boot Modes and Optional Features
 
-Nimphea supports three boot modes for deploying applications. See [BOOT_MODES.md](./BOOT_MODES.md) for a comprehensive decision tree and guide.
+Nimphea supports three boot modes for deploying applications. See [BOOT_MODES](./BOOT_MODES.md) for a comprehensive decision tree and guide.
 
 ### Boot Modes
 

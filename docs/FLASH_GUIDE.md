@@ -1,14 +1,15 @@
 # QSPI Flash Memory Guide
 
+[← Home](index.md)
+
+
 Complete guide to using the onboard QSPI flash memory on Daisy Seed for persistent storage, sample storage, and firmware assets.
 
----
 
 ## Important Distinction
 
-This guide covers **QSPI data storage** (persistent user data, audio samples, etc.). For information about deploying applications via DFU bootloaders to QSPI memory, see [BOOT_MODES.md](./BOOT_MODES.md#boot_qspi-bootloader--external-flash).
+This guide covers **QSPI data storage** (persistent user data, audio samples, etc.). For information about deploying applications via DFU bootloaders to QSPI memory, see [BOOT_MODES](./BOOT_MODES.md#boot_qspi-bootloader--external-flash).
 
----
 
 ## Table of Contents
 
@@ -24,7 +25,6 @@ This guide covers **QSPI data storage** (persistent user data, audio samples, et
 10. [Common Use Cases](#common-use-cases)
 11. [Troubleshooting](#troubleshooting)
 
----
 
 ## Overview
 
@@ -37,7 +37,6 @@ The Daisy Seed includes onboard QSPI (Quad SPI) flash memory for non-volatile st
 
 Unlike internal MCU flash (which holds your program), QSPI flash is dedicated storage accessible via the `QSPIHandle` API.
 
----
 
 ## Hardware Specifications
 
@@ -71,7 +70,6 @@ Unlike internal MCU flash (which holds your program), QSPI flash is dedicated st
 4. If init fails, try `QSPI_DEVICE_IS25LP080D`
 5. Most boards manufactured after 2020 have the 8MB chip
 
----
 
 ## Flash Memory Modes
 
@@ -130,7 +128,6 @@ qspi.init(QSPI_DEVICE_IS25LP064A, QSPI_MODE_MEMORY_MAPPED)
 # Now can read via memory mapping
 ```
 
----
 
 ## Quick Start
 
@@ -231,7 +228,6 @@ storage.save()  # Only writes if changed (dirty detection)
 storage.restoreDefaults()
 ```
 
----
 
 ## Basic Operations
 
@@ -327,7 +323,6 @@ In memory-mapped mode, flash appears as normal memory. You can:
 - Use as source for audio sample playback
 - Access via `PersistentStorage` module
 
----
 
 ## Persistent Settings Storage
 
@@ -450,7 +445,6 @@ globalSettings.init(globalDefaults, address_offset = 0x0000)
 patchSettings.init(patchDefaults, address_offset = 0x1000)  # 4KB offset
 ```
 
----
 
 ## Memory Layout Planning
 
@@ -493,7 +487,6 @@ const WAVETABLE_START = 16 * SECTOR_SIZE          # 0x10000
 const SAMPLES_START = 256 * SECTOR_SIZE           # 0x100000
 ```
 
----
 
 ## Performance Characteristics
 
@@ -545,7 +538,6 @@ proc main() =
     daisy.delay(10)
 ```
 
----
 
 ## Best Practices
 
@@ -673,7 +665,6 @@ proc loadWithValidation(): bool =
   return true
 ```
 
----
 
 ## Common Use Cases
 
@@ -767,7 +758,6 @@ proc clearLog() =
   logWritePtr = LOG_START
 ```
 
----
 
 ## Troubleshooting
 
@@ -955,7 +945,6 @@ if not validate():
   storage.restoreDefaults()
 ```
 
----
 
 ## Summary
 
@@ -1000,7 +989,6 @@ settings.value = 1.0
 storage.save()  # Dirty detection
 ```
 
----
 
 **For more examples, see:**
 - `examples/flash_storage.nim` - Basic flash operations
