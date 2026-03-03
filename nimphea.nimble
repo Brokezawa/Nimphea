@@ -7,7 +7,7 @@ license       = "MIT"
 srcDir        = "src"
 installDirs   = @["libDaisy"]
 installFiles  = @[]
-skipDirs      = @["tests", "docs", "nimphea-examples", "templates", "cmake", "ci", "resources"]
+skipDirs      = @["tests", "docs", "nimphea-examples", "templates", "cmake", "ci", "resources", ".github"]
 skipFiles     = @[]
 
 # Dependencies
