@@ -34,3 +34,7 @@ nimble.develop
 nimble.paths
 nimbledeps/
 config.nims
+
+# Session/agent artifacts
+plan.md
+.opencode/
