@@ -13,27 +13,29 @@ skipFiles     = @[]
 # Dependencies
 
 requires "nim >= 2.0.0"
-requires "unittest2 >= 0.2.0"
+
+dev:
+  requires "unittest2 >= 0.2.0"
 
 # Build configuration
 import os, strutils, strformat, algorithm
 
 after install:
-  # Initialize submodules and build libDaisy on install (only in dev mode)
-  # In CI environments without .git, skip this silently
-  if dirExists(".git"):
+  let libDaisyUrl = "https://github.com/electro-smith/libDaisy.git"
+
+  if not dirExists("libDaisy"):
+    echo "--- Post-install: Cloning libDaisy ---"
+    exec "git clone " & libDaisyUrl & " libDaisy"
+  else:
+    echo "--- Post-install: libDaisy already present ---"
+
+  if fileExists("libDaisy/Makefile"):
     echo "--- Post-install: Building libDaisy ---"
-    exec "git submodule update --init --recursive"
-    
-    if dirExists("libDaisy") and fileExists("libDaisy/Makefile"):
-      withDir "libDaisy":
-        exec "make"
-      echo "--- libDaisy build complete ---"
-    else:
-      echo "Warning: libDaisy source not found or incomplete."
-      echo "You may need to manually initialize it in the package directory:"
-      echo "  cd " & (gorge("nimble path nimphea").strip()) & " && git clone https://github.com/electro-smith/libDaisy.git"
-      echo "  then run 'make' inside libDaisy."
+    withDir "libDaisy":
+      exec "make"
+    echo "--- libDaisy build complete ---"
+  else:
+    echo "Warning: libDaisy/Makefile not found. Build skipped."
 
 const
   libDaisyDir = "libDaisy"
@@ -41,22 +43,27 @@ const
 
 task init_libdaisy, "Initialize and build libDaisy dependency":
   ## One-time setup: clone and build libDaisy C++ library
-  
+  let libDaisyUrl = "https://github.com/electro-smith/libDaisy.git"
+
   echo "=== Nimphea: libDaisy Initialization ==="
   echo ""
-  
+
   if not dirExists(libDaisyDir):
-    echo "Initializing git submodules..."
-    exec "git submodule update --init --recursive"
+    if dirExists(".git"):
+      echo "Initializing git submodules..."
+      exec "git submodule update --init --recursive"
+    else:
+      echo "Cloning libDaisy (not a git repo, using direct clone)..."
+      exec "git clone " & libDaisyUrl & " " & libDaisyDir
   else:
-    echo "libDaisy submodule found"
-  
+    echo "libDaisy already present"
+
   echo ""
   echo "Building libDaisy C++ library..."
   echo "This may take several minutes..."
   withDir libDaisyDir:
     exec "make"
-  
+
   echo ""
   echo "libDaisy initialization complete!"
 

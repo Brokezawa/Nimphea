@@ -22,6 +22,9 @@ jobs:
           nim-version: '2.2.8'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Install unittest2
+        run: nimble install -y unittest2
+
       - name: Install dependencies
         run: nimble install -d -y
 
