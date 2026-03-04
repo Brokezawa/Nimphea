@@ -25,7 +25,7 @@ after install:
 
   if not dirExists("libDaisy"):
     echo "--- Post-install: Cloning libDaisy ---"
-    exec "git clone " & libDaisyUrl & " libDaisy"
+    exec "git clone --recurse-submodules " & libDaisyUrl & " libDaisy"
   else:
     echo "--- Post-install: libDaisy already present ---"
 
@@ -54,7 +54,7 @@ task init_libdaisy, "Initialize and build libDaisy dependency":
       exec "git submodule update --init --recursive"
     else:
       echo "Cloning libDaisy (not a git repo, using direct clone)..."
-      exec "git clone " & libDaisyUrl & " " & libDaisyDir
+      exec "git clone --recurse-submodules " & libDaisyUrl & " " & libDaisyDir
   else:
     echo "libDaisy already present"
 
