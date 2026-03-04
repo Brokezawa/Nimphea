@@ -3,8 +3,8 @@
 A comprehensive, type-safe Nim wrapper for the [libDaisy](https://github.com/electro-smith/libDaisy) hardware abstraction library, enabling elegant Nim development for the Electro-Smith Daisy Seed embedded audio platform.
 
 [![CI](https://github.com/Brokezawa/nimphea/actions/workflows/ci.yml/badge.svg)](https://github.com/Brokezawa/nimphea/actions/workflows/ci.yml)
+[![Docs](https://github.com/Brokezawa/nimphea/actions/workflows/docs.yml/badge.svg)](https://brokezawa.github.io/nimphea/)
 [![Version](https://img.shields.io/badge/version-1.1.0-blue)](https://github.com/Brokezawa/nimphea/releases/tag/v1.1.0)
-[![Platform](https://img.shields.io/badge/platform-ARM%20Cortex--M7-blue)](https://www.st.com/en/microcontrollers-microprocessors/stm32h750xb.html)
 [![Nim](https://img.shields.io/badge/nim-2.0%2B-orange)](https://nim-lang.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
@@ -54,13 +54,12 @@ nimble flash
 ```
 
 ## Documentation
+ Official docs (GitHub Pages): https://brokezawa.github.io/nimphea
 
-Comprehensive documentation is available at [https://brokezawa.github.io/nimphea](https://brokezawa.github.io/nimphea):
-
-- [Installation Guide](https://brokezawa.github.io/nimphea/api/guides/installation.html)
-- [Getting Started](https://brokezawa.github.io/nimphea/api/guides/getting-started.html)
-- [CMSIS-DSP Guide](https://brokezawa.github.io/nimphea/api/guides/cmsis-dsp.html)
-- [API Reference](https://brokezawa.github.io/nimphea/api/theindex.html)
+- [Installation Guide](docs/guides/installation.md)
+- [Getting Started](docs/guides/getting-started.md)
+- [CMSIS-DSP Guide](docs/guides/getting-started.md)
+- [API Reference](docs/API_REFERENCE.md)
 
 ## Examples
 
@@ -80,5 +79,4 @@ This wrapper follows the same MIT license as libDaisy. See [LICENSE](LICENSE) fi
 
 ## contributing
 
-Contributions are welcome! See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for details.
-
+Contributions are welcome! See [CONTRIBUTING](docs/CONTRIBUTING.md) for details.
